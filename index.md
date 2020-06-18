@@ -1,859 +1,386 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Styled Map Types</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width" />
-    <style>
-/* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 70%;
-      }
-	 
-/* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-
+<head>
+<meta charset="utf-8" />
+<title>Create and style clusters</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
 <style>
-
-/* Dropdown Button */
-.dropbtn {
-  background-color: #ffffff;
-  color: black;
-  margin-top:10px;
-  margin-left:10px;
-  padding: 6px;
-  font-size: 25px;
-  border: 2px solid #7b6662;
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+.mapboxgl-popup-content-wrapper{
+    padding-top: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+	margin-left: 0px;
+    padding-left: 0px;
 }
+.mapboxgl-popup {
+margin-top: 0px;
 
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
+	min-width: 330px;
+	min-height: 200px;
+	font: 8px/15px 'Open Sans', sans-serif;
+	text-color: white;
+	border-radius: 0px;
 }
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
-.box{
+.mapboxgl-popup-content {
+	background: #c6c8ee; 
     margin-top: 0px;
-	margin-left:30%;
-	padding:20px;
-  padding-top:5px;
-	width:420px;
-	height:65px;
-	border-top: 0px solid #7b6662;
-	background:#f4f0e3;
-	position: relative;
-}
-/* Button 1*/
-.button1 {
-  background-color: #dfd2ae;
-  color: black;
-  margin-top:-25px;
-  margin-left:10px;
-  padding: 6px;
-  font-size: 25px;
-  border: 2px solid #7b6662;
-}
-.button1 a{
-  color: black;
-  padding: 1px 1px;
-  text-decoration: none;
-  display: block;
-}
-.button1:active{
-  background-color:#3e8e41;
-}
-.box2{
-  margin-top: 0px;
-	margin-left:30%;
-	padding-left:70px;
-	width:420px;
-	height:60px;
-	position: relative;
-	background:none;
-}
-.bar{
-  margin-top: -6px;
-  margin-left:23%;
-	width:610px;
-	height:12px;
-	position: relative;
-	background: #7b6662;
+	padding-top: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+	margin-left: 0px;
+    padding-left: 0px;
+	max-height: 260px;
+}	
+
+
+.cluster {
+  background-image: url('https://1.bp.blogspot.com/-WlfHJed1Tlc/XqAKCGO1CtI/AAAAAAAAEaE/K6OH_iDzsuszo6m5WhOwIfHT0flqoxOtQCLcBGAsYHQ/s1600/dot40.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 </style>
-<style>
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #description {
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-      }
+</head>
+<body>
 
-      #infowindow-content .title {
-        font-weight: bold;
-      }
+<div id="map"></div>
 
-      #infowindow-content {
-        display: none;
-      }
-
-      #map #infowindow-content {
-        display: inline;
-      }
-
-      .pac-card {
-        margin: 10px 10px 0 0;
-        border-radius: 2px 0 0 2px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        outline: 10px solid black;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        background-color: #fff;
-        font-family: Roboto;
-      }
-
-      #pac-container {
-        padding-bottom: 30px;
-        margin-right: 30px;
-      }
-
-      .pac-controls {
-        display: inline-block;
-        padding: 5px 11px;
-      }
-
-      .pac-controls label {
-        font-family: Roboto;
-        font-size: 20px;
-        font-weight: 300;
-      }
-
-      #pac-input {
-        background-color: #f1f1f1;
-        font-family: Roboto;
-        font-size: 20px;
-        font-weight: 300;
-        margin-left: 12px;
-        padding: 0 11px 0 13px;
-        text-overflow: ellipsis;
-        width: 400px;
-        height:30px;
-        border: 3px solid #7b6662;
-      }
-
-      #pac-input:focus {
-        border-color: blue;
-      }
-
-      #title {
-        color: #fff;
-        background-color: #4d90fe;
-        font-size: 25px;
-        font-weight: 500;
-        padding: 6px 12px;
-      }
-      #target {
-        width: 345px;
-      }
-    </style>
-  </head>
-  <body>
-<input id="pac-input" class="controls" type="text" placeholder="Search Box">
-    <div id="map"></div>
-<div class="bar">
-</div>
-<div class="box">
-<div class="dropdown">
-  <button class="dropbtn">Function</button>
-  <div class="dropdown-content">
-    <a href="#">Function 1</a>
-    <a href="#">Function 2</a>
-    <a href="#">Function 3</a>
-  </div>
-</div>
-<div class="dropdown">
-  <button class="dropbtn">Optional </button>
-  <div class="dropdown-content">
-    <a href="#">Option 1</a>
-    <a href="#">Option 2</a>
-    <a href="#">Option 3</a>
-  </div>
-</div>
-  <div class="dropdown">
-  <button class="dropbtn">Other Button</button>
-  <div class="dropdown-content">
-    <a href="#">Button 1</a>
-    <a href="#">Button 2</a>
-    <a href="#">Button 3</a>
-  </div>
-</div>
-</div>
-<div class="box2">
-<div class="dropdown">
-  <button class="button1"><a href="#">Refresh</a></button>
-</div>
-<div class="dropdown">
-  <button class="button1"><a href="#">More research</a></button>
-</div>
-</div>
-      
 <script>
-
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-</script>
-<script>
-      function initMap() {
-
-        // Create a new StyledMapType object, passing it an array of styles,
-        // and the name to be displayed on the map type control.
-        var styledMapType = new google.maps.StyledMapType(
-            [
-              {elementType: 'geometry', stylers: [{color: '#ebe3cd'}]},
-              {elementType: 'labels.text.fill', stylers: [{color: '#523735'}]},
-              {elementType: 'labels.text.stroke', stylers: [{color: '#f5f1e6'}]},
-              {
-                featureType: 'administrative',
-                elementType: 'geometry.stroke',
-                stylers: [{color: '#c9b2a6'}]
-              },
-              {
-                featureType: 'administrative.land_parcel',
-                elementType: 'geometry.stroke',
-                stylers: [{color: '#dcd2be'}]
-              },
-              {
-                featureType: 'administrative.land_parcel',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#ae9e90'}]
-              },
-              {
-                featureType: 'landscape.natural',
-                elementType: 'geometry',
-                stylers: [{color: '#dfd2ae'}]
-              },
-              {
-                featureType: 'poi',
-                elementType: 'geometry',
-                stylers: [{color: '#dfd2ae'}]
-              },
-              {
-                featureType: 'poi',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#93817c'}]
-              },
-              {
-                featureType: 'poi.park',
-                elementType: 'geometry.fill',
-                stylers: [{color: '#a5b076'}]
-              },
-              {
-                featureType: 'poi.park',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#447530'}]
-              },
-              {
-                featureType: 'road',
-                elementType: 'geometry',
-                stylers: [{color: '#f5f1e6'}]
-              },
-              {
-                featureType: 'road.arterial',
-                elementType: 'geometry',
-                stylers: [{color: '#fdfcf8'}]
-              },
-              {
-                featureType: 'road.highway',
-                elementType: 'geometry',
-                stylers: [{color: '#f8c967'}]
-              },
-              {
-                featureType: 'road.highway',
-                elementType: 'geometry.stroke',
-                stylers: [{color: '#e9bc62'}]
-              },
-              {
-                featureType: 'road.highway.controlled_access',
-                elementType: 'geometry',
-                stylers: [{color: '#e98d58'}]
-              },
-              {
-                featureType: 'road.highway.controlled_access',
-                elementType: 'geometry.stroke',
-                stylers: [{color: '#db8555'}]
-              },
-              {
-                featureType: 'road.local',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#806b63'}]
-              },
-              {
-                featureType: 'transit.line',
-                elementType: 'geometry',
-                stylers: [{color: '#dfd2ae'}]
-              },
-              {
-                featureType: 'transit.line',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#8f7d77'}]
-              },
-              {
-                featureType: 'transit.line',
-                elementType: 'labels.text.stroke',
-                stylers: [{color: '#ebe3cd'}]
-              },
-              {
-                featureType: 'transit.station',
-                elementType: 'geometry',
-                stylers: [{color: '#dfd2ae'}]
-              },
-              {
-                featureType: 'water',
-                elementType: 'geometry.fill',
-                stylers: [{color: '#b9d3c2'}]
-              },
-              {
-                featureType: 'water',
-                elementType: 'labels.text.fill',
-                stylers: [{color: '#92998d'}]
-              }
-            ],
-            {name: 'Styled Map'});
-
-        // Create a map object, and include the MapTypeId to add
-        // to the map type control.
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 21.054836, lng: 105.820533},
-          zoom: 13,
-          mapTypeControlOptions: {
-            mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain',
-                    'styled_map']
-          }
-        });
-
-        //Associate the styled map with the MapTypeId and set it to display.
-        map.mapTypes.set('styled_map', styledMapType);
-        map.setMapTypeId('styled_map');
-		
-var image = 'https://2.bp.blogspot.com/-q518vZnB7Rs/W-KsCgwsVPI/AAAAAAAAAZ8/gJ27kVMMZ9YSOVx4QWw_dHNcL4dLWiwlACLcBGAs/s1600/s40.png';
-
-        var contentString = '<div id="content">'+
-            '<div id="siteNotice">'+
-            '</div>'+
-            '<h3 id="firstHeading" class="firstHeading"> <span style="color: #bf005f">ADD GROUP</span></h3>'+
-            '<div id="bodyContent">'+
-            '<p><b><span style="color: #ff7f00">ACT</span> Apartment Map</b></br>The map will help you easily find a good place to live and invest in Vietnam </b>'
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString,
-          maxWidth: 270
-        });
-
-        var marker = new google.maps.Marker({
-          position: {lat: 21.054502, lng: 105.820617},
-          map: map,
-          icon: image,
-          draggable: true,
-          animation: google.maps.Animation.BOUNCE,
-          title: 'Factory Map'
-        });
-
-          marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-    var infowindow = new google.maps.InfoWindow({
-        content: contentString,
-		maxWidth: 170
+	mapboxgl.accessToken = 'pk.eyJ1IjoibHVjYXNsdWF0IiwiYSI6ImNrOTdiOThodjB0ajQzcGwyczkwZ2Fnc3kifQ.vQ83gWW5CBR3af1_Xzo6Vw';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v10',
+        center: [105.820358, 21.054403],
+        zoom: 10
     });
 
-   //Create a marker pin to add to the map
-   var marker;
-   marker1 = new google.maps.Marker({
-      position: new google.maps.LatLng(21.054836, -105.820533),//set the position of the pin
-      map: map,
-      title: "ADD Group",
-      icon: "http://www.codeshare.co.uk/images/blue-pin.png", //if you comment this out or delete it you will get the default pin icon.
-      animation:google.maps.Animation.DROP
-   });
-
-    marker1.addListener('click', function() {
-        infowindow.open(map, marker1);
-    });
-	//-------START CLUSTER INFOWINDOW SETTING------
-
-var infoWin = new google.maps.InfoWindow({content: location.info, maxWidth: 360});
-var factoryimg = 'https://4.bp.blogspot.com/-NI_7HK9mcbA/W-KoaBBzn-I/AAAAAAAAAZQ/kNHeKbXkaHQGbvMN6fRrJT9WkyvQuO6NwCLcBGAs/s1600/x25.png';
-var titles = 'Factory Level 2';
-var factorymarkers = factory.map(function(location, i) {
-          
-          var factorymarkers = new google.maps.Marker({
-    position: location,
-    icon: factoryimg,
-    Draggable: false,
-    animation: google.maps.Animation.DROP,
-    title: titles
-  });
-  google.maps.event.addListener(factorymarkers, 'click', function(evt) {
-    infoWin.setContent(location.info);
-    
-    infoWin.open(map, factorymarkers);
-  })
-  return factorymarkers;
-});
-//------------------------------ CREATE SEARCH BOX and link it to the UI element.---------------------
-        var input = document.getElementById('pac-input');
-        var searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(input);
-
-        // Bias the SearchBox results towards current map's viewport.
-        map.addListener('bounds_changed', function() {
-          searchBox.setBounds(map.getBounds());
-        });
-
-        var markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener('places_changed', function() {
-          var places = searchBox.getPlaces();
-
-          if (places.length == 0) {
-            return;
-          }
-
-          // Clear out the old markers.
-          markers.forEach(function(marker) {
-            marker.setMap(null);
-          });
-          markers = [];
-          // For each place, get the icon, name and location.
-          var bounds = new google.maps.LatLngBounds();
-          places.forEach(function(place) {
-            if (!place.geometry) {
-              console.log("Returned place contains no geometry");
-              return;
-            }
-            var icon = {
-              url: place.icon,
-              size: new google.maps.Size(71, 71),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(17, 34),
-              scaledSize: new google.maps.Size(25, 25)
-            };
-
-            // Create a marker for each place.
-            markers.push(new google.maps.Marker({
-              map: map,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            }));
-
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-            } else {
-              bounds.extend(place.geometry.location);
-            }
-          });
-          map.fitBounds(bounds);
-        });
-//----------END SEARCH BOX SCRIPT--------------------------
-
-//----------END CLUSTER INFOR---------
-//----------------------------------------START VIGLACERA CLUSTER-------------------------------
-var viglaimg = 'https://1.bp.blogspot.com/-iDUkh25mHlk/XqQIdASerFI/AAAAAAAAEbM/PjTG8R8QqZYs0KvTu8L5-fVGtGwS4bEpQCLcBGAsYHQ/s1600/Green4045.png';
-var titles = 'Apartment Building';
-var viglamarkers = vigla.map(function(location, i) {
-          
-          var viglamarkers = new google.maps.Marker({
-    position: location,
-    icon: viglaimg,
-    Draggable: false,
-    animation: google.maps.Animation.DROP,
-    title: titles
-  });
-  google.maps.event.addListener(viglamarkers, 'click', function(evt) {
-    infoWin.setContent(location.info);
-    
-    infoWin.open(map, viglamarkers);
-  });
-  return viglamarkers;
-});
-
-//---- Add a marker clusterer to manage the markers.-
-//set style options for marker clusters (these are the default styles)
-viglamcOptions = {styles: [{
-height: 71,
-url: "https://1.bp.blogspot.com/-ZlDKibOg5T4/XqPAy5MkBjI/AAAAAAAAEa0/k5QlOiMecSUgvlgKXcMWzMg1gAU8xUnwgCLcBGAsYHQ/s1600/orangedot40dddd.png",
-width: 68
-}]};
-viglamcOptions1 = {styles: [{
-height: 53,
-url: "https://4.bp.blogspot.com/-7k6GkOO4VbI/XHNqzLop7PI/AAAAAAAAAoQ/ha9vFOkbUJAqx3jh7ZGNUKQa3Uz7H8BGgCLcBGAs/s1600/orangedot40.png",
-width: 40
-}]};
-//init clusterer with your options
-var viglamc = new MarkerClusterer(map, viglamarkers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-//------------------------------------END VIGLACERA CLUSTER-------------------------------
-//--------------------------------- factory marker----------------------
-viglamcOptions1 = {styles: [{
-height: 53,
-url: "https://3.bp.blogspot.com/-jOsaGS4hBMk/XHNrVxeNZJI/AAAAAAAAAoY/EUUY4NtyzE4s3IO5MnlSph5QR7gXr2KpgCLcBGAs/s1600/Bluedot%2B40.png",
-width: 40
-}]};
-
-//init clusterer with your options
-//--------------END Vigla---------
-}
-//-------------- START CLUSTER MARK Vigla again-------------
-
-var vigla = [
-        //////Apartment
-        {lat:  21.050269, lng:  105.779182, info: "<img src=' https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/an-binh-city style=text-decoration:none><p align=middle><font size=4> An Binh City</font></p></a></b>"},
-        {lat:  21.070436, lng:  105.791523, info: "<img src=' https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/c1-c2-xuan-dinh style=text-decoration:none><p align=middle><font size=4> Chung Cu C1 - C2 Xuan Dinh  </font></p></a></b>"},
-        {lat:  21.050844, lng:  105.786173, info: "<img src=' https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/ct3-co-nhue style=text-decoration:none><p align=middle><font size=4> CT3 Co Nhue </font></p></a></b>"},
-        {lat:  21.043421, lng:  105.767855, info: "<img src=' https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/goldmark-city style=text-decoration:none><p align=middle><font size=4> Goldmark City </font></p></a> </b>"},
-        {lat:  21.052203, lng:  105.780868, info: "<img src=' https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/green-stars style=text-decoration:none><p align=middle><font size=4> Green Stars</font></p></a> </b>"},
-        {lat: 21.047067, lng: 105.786543, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/hanhud-hoang-quoc-viet style=text-decoration:none><p align=middle><font size=4> Hanhud Hoang Quoc Viet </font></p></a></b>"},
-        {lat: 21.051161, lng: 105.785054, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/kdtm-co-nhue style=text-decoration:none><p align=middle><font size=4> KDTM Co Nhue </font></p></a></b>"},
-        {lat:  21.081145, lng:  105.791565, info: "<img src=' https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/the-link style=text-decoration:none><p align=middle><font size=4> The LINK </font></p></a></b>"},
-        {lat: 21.064551, lng: 105.782579, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/kdtm-resco style=text-decoration:none><p align=middle><font size=4> KDTM Resco </font></p></a></b>"},
-        {lat: 21.063108, lng: 105.795617, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/ngoai-giao-doan style=text-decoration:none><p align=middle><font size=4> Ngoai Giao Doan </font></p></a></b>"},
-        {lat: 21.057518, lng: 105.777450, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/nha-o-bo-cong-an style=text-decoration:none><p align=middle><font size=4> Nha O Bo Cong An  </font></p></a></b>"},
-        {lat: 21.069553, lng: 105.796947, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/chung-cu-789-xuan-dinh style=text-decoration:none><p align=middle><font size=4> Chung Cu 789 Xuan Dinh </font></p></a></b>"},
-        {lat: 21.086424, lng: 105.782230, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/ecohome-1 style=text-decoration:none><p align=middle><font size=4> Ecohome 1 </font></p></a></b>"},
-        {lat: 21.083702, lng: 105.784339, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/ecohome-2 style=text-decoration:none><p align=middle><font size=4> Ecohome 2 </font></p></a></b>"},
-        {lat: 21.041790, lng: 105.765374, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/scitech-tower style=text-decoration:none><p align=middle><font size=4> Scitech Tower </font></p></a></b>"},
-        {lat: 21.041695, lng: 105.758952, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/toa-nha-intracom-2 style=text-decoration:none><p align=middle><font size=4> Toa Nha Intracom 2  </font></p></a></b>"},
-        {lat: 21.050439, lng: 105.785330, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/ct2b-nam-cuong style=text-decoration:none><p align=middle><font size=4> CT2B Nam Cuong  </font></p></a></b>"},
-        {lat: 21.047487, lng: 105.796702, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/chung-cu-238-hoang-quoc-viet style=text-decoration:none><p align=middle><font size=4> Chung Cu 238 Hoang Quoc Viet </font></p></a></b>"},
-        {lat: 21.044920, lng: 105.767718, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/vc7-housing-complex style=text-decoration:none><p align=middle><font size=4> VC7 Housing Complex </font></p></a></b>"},
-        {lat: 21.02975, lng: 105.821472, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hanoi Golden Lake</font></p></a></b>"}, 
-		{lat: 21.022917, lng: 105.814611, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> C1 Thanh Cong</font></p></a></b>"}, 
-		{lat: 21.030389, lng: 105.823639, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Nui Truc Square</font></p></a></b>"}, 
-		{lat: 21.027471999999999, lng: 105.822361, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> C7 Giang Vo</font></p></a></b>"}, 
-		{lat: 21.044694, lng: 105.845056, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hanoi Aqua Central</font></p></a></b>"}, 
-		{lat: 21.019110999999999, lng: 105.815917, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> BRG Grand Plaza</font></p></a></b>"}, 
-		{lat: 21.020278000000001, lng: 105.81788899999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sun Grand City - 31 Lang Ha</font></p></a></b>"}, 
-		{lat: 21.031749999999999, lng: 105.814944, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinhomes Metropolis - Lieu Giai</font></p></a></b>"}, 
-		{lat: 21.038250000000001, lng: 105.813389, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> 379 Doi Can</font></p></a></b>"}, 
-		{lat: 21.035333000000001, lng: 105.813806, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Lieu Giai Tower</font></p></a></b>"}, 
-		{lat: 21.029693999999999, lng: 105.82130600000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Golden Armor</font></p></a></b>"}, 
-		{lat: 21.041250000000002, lng: 105.81191699999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu So 6 Doi Nhan</font></p></a></b>"}, 
-		{lat: 21.027722000000001, lng: 105.816694, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Platinum Residences</font></p></a></b>"}, 
-		{lat: 21.026, lng: 105.82216699999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu D2 Giang Vo</font></p></a></b>"}, 
-		{lat: 21.040889, lng: 105.807694, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hoa Binh Green Apartment</font></p></a></b>"}, 
-		{lat: 21.036110999999998, lng: 105.78236099999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Indochina Plaza Residences</font></p></a></b>"}, 
-		{lat: 21.027083000000001, lng: 105.786056, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sky Park Residence</font></p></a></b>"}, 
-		{lat: 21.00525, lng: 105.798778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Mandarin Garden</font></p></a></b>"}, 
-		{lat: 21.004694000000001, lng: 105.793778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinhomes D'Capitale</font></p></a></b>"}, 
-		{lat: 21.025971999999999, lng: 105.791583, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Luxury Park Views</font></p></a></b>"}, 
-		{lat: 21.032167000000001, lng: 105.791944, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Ha Do Parkside</font></p></a></b>"}, 
-		{lat: 21.020111, lng: 105.791222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Central Field Trung Kinh</font></p></a></b>"}, 
-		{lat: 21.019472, lng: 105.79427800000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chelsea Residences</font></p></a></b>"}, 
-		{lat: 21.026306000000002, lng: 105.78925, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Golden Park tower</font></p></a></b>"}, 
-{lat: 21.044028000000001, lng: 105.80283300000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Trang An Complex</font></p></a></b>"}, 
-{lat: 21.027111000000001, lng: 105.79349999999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Ha Do Park View</font></p></a></b>"}, 
-{lat: 21.016138999999999, lng: 105.79261099999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Home City Trung Kính</font></p></a></b>"}, 
-{lat: 21.005749999999999, lng: 105.798778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> KDT Dong Nam Tran Duy Hung</font></p></a></b>"}, 
-{lat: 21.013611000000001, lng: 105.803472, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Eurowindow Multi Complex</font></p></a></b>"}, 
-{lat: 21.035610999999999, lng: 105.794083, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Discovery Complex</font></p></a></b>"}, 
-{lat: 21.015999999999998, lng: 105.797056, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Park View City</font></p></a></b>"}, 
-{lat: 21.032222000000001, lng: 105.799694, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Cau Giay Center Point</font></p></a></b>"}, 
-{lat: 21.035806000000001, lng: 105.783778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Richland Southern</font></p></a></b>"}, 
-{lat: 21.026083, lng: 105.799222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Lancaster Luminaire</font></p></a></b>"}, 
-{lat: 21.018528, lng: 105.824333, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hoang Cau Skyline</font></p></a></b>"}, 
-{lat: 21.019722000000002, lng: 105.821611, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> TDC Hoang Cau</font></p></a></b>"}, 
-{lat: 21.023444000000001, lng: 105.80919400000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinhomes Nguyen Chi Thanh</font></p></a></b>"}, 
-{lat: 21.019528000000001, lng: 105.82252800000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> D'. Le Pont D'or Hoang Cau</font></p></a></b>"}, 
-{lat: 21.001055999999998, lng: 105.837222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Capital Garden 102 Truong Chinh Kinh Do</font></p></a></b>"}, 
-{lat: 21.013361, lng: 105.827639, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu Sunrise Tower - 187 Tay Son</font></p></a></b>"}, 
-{lat: 21.014527999999999, lng: 105.81699999999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Song Hong Park View</font></p></a></b>"}, 
-{lat: 21.021083000000001, lng: 105.828028, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> 170 De La Thanh - GP Building</font></p></a></b>"}, 
-{lat: 21.020056, lng: 105.80875, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> M3 - M4 Nguyen Chi Thanh</font></p></a></b>"}, 
-{lat: 21.027332999999999, lng: 105.803889, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hong Kong Tower</font></p></a></b>"}, 
-{lat: 21.008389000000001, lng: 105.83452800000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> B4 - B14 Kim Lien</font></p></a></b>"}, 
-{lat: 21.005583000000001, lng: 105.823583, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Toa Nha MIPEC Tay Son</font></p></a></b>"}, 
-{lat: 20.980250000000002, lng: 105.784667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu Booyoung</font></p></a></b>"}, 
-{lat: 20.984110999999999, lng: 105.75775, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Đô Thị Mới Dương Nội - Anland Lakeview</font></p></a></b>"}, 
-{lat: 20.976027999999999, lng: 105.761, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Đô Thị Mới Dương Nội - Anland Premium</font></p></a></b>"}, 
-{lat: 20.983416999999999, lng: 105.754167, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Đô Thị Mới Dương Nội - Anland Complex</font></p></a></b>"}, 
-{lat: 20.975667000000001, lng: 105.78063899999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tháp Doanh Nhân Tower</font></p></a></b>"}, 
-{lat: 20.972916999999999, lng: 105.756889, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Terra An Hưng</font></p></a></b>"}, 
-{lat: 20.960667000000001, lng: 105.742361, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Xuân Mai Sparks Tower</font></p></a></b>"}, 
-{lat: 20.959278000000001, lng: 105.76683300000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> KDTM Văn Phú - The K Park</font></p></a></b>"}, 
-{lat: 20.959944, lng: 105.7675, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> KDTM Văn Phú - The Victoria</font></p></a></b>"}, 
-{lat: 20.957611, lng: 105.76983300000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> KDTM Văn Phú - CT12 Văn Phú</font></p></a></b>"}, 
-{lat: 20.958389, lng: 105.763139, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> KDTM Văn Phú - C10 - C11</font></p></a></b>"}, 
-{lat: 20.961082999999999, lng: 105.794111, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Đô Thị Xa La</font></p></a></b>"}, 
-{lat: 20.955249999999999, lng: 105.74422199999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Nhà Ơ BỘ Tư Lệnh Thủ đô Hà Nội</font></p></a></b>"}, 
-{lat: 20.952639000000001, lng: 105.758194, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cư PCC1 Complex</font></p></a></b>"}, 
-{lat: 20.982056, lng: 105.742833, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> ICID Complex</font></p></a></b>"}, 
-{lat: 20.946306, lng: 105.755944, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cư The Vesta</font></p></a></b>"}, 
-{lat: 20.974610999999999, lng: 105.78788900000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Rainbow Văn Quán</font></p></a></b>"}, 
-{lat: 20.951443999999999, lng: 105.790778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Mipec City View</font></p></a></b>"}, 
-{lat: 20.986889000000001, lng: 105.785083, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Mulberry Lane</font></p></a></b>"}, 
-{lat: 20.963722000000001, lng: 105.775972, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hyundai Hillstate</font></p></a></b>"}, 
-{lat: 20.986694, lng: 105.782944, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cư Euroland</font></p></a></b>"}, 
-{lat: 20.987110999999999, lng: 105.786361, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Seasons Avenue</font></p></a></b>"}, 
-{lat: 20.972360999999999, lng: 105.757667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Pride</font></p></a></b>"}, 
-{lat: 20.976721999999999, lng: 105.775306, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Goldsilk Complex</font></p></a></b>"}, 
-{lat: 20.974556, lng: 105.76088900000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Usilk City</font></p></a></b>"}, 
-{lat: 20.974944000000001, lng: 105.761444, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> BID Residence</font></p></a></b>"}, 
-{lat: 20.982638999999999, lng: 105.789861, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Nhà Ở Bắc Hà</font></p></a></b>"}, 
-{lat: 20.962278000000001, lng: 105.763944, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> FLC Star Tower</font></p></a></b>"}, 
-{lat: 20.964694000000001, lng: 105.764556, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cư An Lạc - Nam La Khê</font></p></a></b>"}, 
-{lat: 20.973943999999999, lng: 105.77847199999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tòa tháp Thiên Niên Kỷ Hà Tây</font></p></a></b>"}, 
-{lat: 20.953749999999999, lng: 105.788639, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu đô thị Kiến Hưng</font></p></a></b>"}, 
-{lat: 20.963861000000001, lng: 105.777778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Phú Thịnh Green Park</font></p></a></b>"}, 
-{lat: 20.976472000000001, lng: 105.762722, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> HPC Landmark 105</font></p></a></b>"}, 
-{lat: 20.959139, lng: 105.798361, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cư Sails Tower</font></p></a></b>"}, 
-{lat: 20.974917000000001, lng: 105.776639, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Samsora Premier</font></p></a></b>"}, 
-{lat: 20.972833000000001, lng: 105.76344400000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Đô Thị Văn Khê</font></p></a></b>"}, 
-{lat: 20.938749999999999, lng: 105.78744399999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Đô Thị Thanh Hà Mường Thanh</font></p></a></b>"}, 
-{lat: 20.979139, lng: 105.78536099999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hồ Gươm Plaza</font></p></a></b>"}, 
-{lat: 20.962889000000001, lng: 105.77333299999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Xuân Mai Park State</font></p></a></b>"}, 
-{lat: 20.977333000000002, lng: 105.81055600000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Bea Sky</font></p></a></b>"}, 
-{lat: 20.981472, lng: 105.880222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu X203 Linh Nam</font></p></a></b>"}, 
-{lat: 20.973832999999999, lng: 105.842389, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinawaco Thinh Liet</font></p></a></b>"}, 
-{lat: 20.988944, lng: 105.858417, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Panorama Hoang Van Thu</font></p></a></b>"}, 
-{lat: 20.955749999999998, lng: 105.84486099999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Athena Complex Phap Van</font></p></a></b>"}, 
-{lat: 20.98075, lng: 105.81063899999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Athena Fulland</font></p></a></b>"}, 
-{lat: 20.965083, lng: 105.84480600000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Green Park Tran Thu Do</font></p></a></b>"}, 
-{lat: 20.984528000000001, lng: 105.835611, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sky Central</font></p></a></b>"}, 
-{lat: 20.974250000000001, lng: 105.84402799999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hong Ha Tower</font></p></a></b>"}, 
-{lat: 20.984860999999999, lng: 105.833139, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> An Binh 1</font></p></a></b>"}, 
-{lat: 20.9785, lng: 105.83627799999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Smile Building</font></p></a></b>"}, 
-{lat: 20.972000000000001, lng: 105.879639, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Zen Residence</font></p></a></b>"}, 
-{lat: 20.973389000000001, lng: 105.83925000000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Eco Lake View</font></p></a></b>"}, 
-{lat: 20.987138999999999, lng: 105.849722, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> HUD3 Nguyen Duc Canh</font></p></a></b>"}, 
-{lat: 20.958528000000001, lng: 105.83886099999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Osaka Complex</font></p></a></b>"}, 
-{lat: 20.975639000000001, lng: 105.869722, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Gelaxia Riverside</font></p></a></b>"}, 
-{lat: 20.998916999999999, lng: 105.880444, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> T&T Riverview</font></p></a></b>"}, 
-{lat: 20.964082999999999, lng: 105.823194, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> B1 - B2 Tay Nam Linh Dam</font></p></a></b>"}, 
-{lat: 20.963971999999998, lng: 105.822444, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Rice City Linh Dam</font></p></a></b>"}, 
-{lat: 20.967167, lng: 105.833139, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> VP6 Linh Dam</font></p></a></b>"}, 
-{lat: 20.970611000000002, lng: 105.878111, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Two Residence - Gamuda Garden</font></p></a></b>"}, 
-{lat: 20.984306, lng: 105.84733300000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Mandarin Garden 2</font></p></a></b>"}, 
-{lat: 20.964666999999999, lng: 105.827361, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> HH2 Linh Dam</font></p></a></b>"}, 
-{lat: 20.974972000000001, lng: 105.819889, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu Thong Tan Xa Viet Nam</font></p></a></b>"}, 
-{lat: 20.974694, lng: 105.82597199999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Nha O Xa Hoi Dong Mo</font></p></a></b>"}, 
-{lat: 20.989833000000001, lng: 105.867861, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sunshine Palace</font></p></a></b>"}, 
-{lat: 20.963305999999999, lng: 105.864694, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hateco Hoang Mai</font></p></a></b>"}, 
-{lat: 20.987749999999998, lng: 105.83502799999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> CT36 - Dream House</font></p></a></b>"}, 
-{lat: 20.964110999999999, lng: 105.82599999999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> HH1 Linh Dam</font></p></a></b>"}, 
-{lat: 20.984249999999999, lng: 105.85247200000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu Nha O Quan Doi K35 Tan Mai</font></p></a></b>"}, 
-{lat: 20.989417, lng: 105.866028, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> New Horizon City - 87 Linh Nam</font></p></a></b>"}, 
-{lat: 20.986806000000001, lng: 105.849833, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hoa Phat 70 NDC Tower</font></p></a></b>"}, 
-{lat: 20.995028000000001, lng: 105.863472, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Helios Tower 75 Tam Trinh</font></p></a></b>"}, 
-{lat: 20.981888999999999, lng: 105.87091700000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Dong Phat Park View Tower</font></p></a></b>"}, 
-{lat: 20.9635, lng: 105.827611, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> HH3 Linh Dam</font></p></a></b>"}, 
-{lat: 20.964361, lng: 105.825278, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> CT3 Tay Nam Linh Dam</font></p></a></b>"}, 
-{lat: 20.963971999999998, lng: 105.824167, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Rainbow Linh Dam</font></p></a></b>"}, 
-{lat: 20.981860999999999, lng: 105.87097199999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Đông Phát Tower</font></p></a></b>"}, 
-{lat: 20.990639000000002, lng: 105.787639, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Intracom 1 Trung Van</font></p></a></b>"}, 
-{lat: 20.991167000000001, lng: 105.755278, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> FLC Garden City</font></p></a></b>"}, 
-{lat: 21.006416999999999, lng: 105.769167, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> My Dinh Pearl</font></p></a></b>"}, 
-{lat: 20.996389000000001, lng: 105.79305600000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tay Ha Tower</font></p></a></b>"}, 
-{lat: 20.986556, lng: 105.78874999999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu An Lac - Phung Khoang</font></p></a></b>"}, 
-{lat: 20.998166999999999, lng: 105.794444, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Viwaseen Tower</font></p></a></b>"}, 
-{lat: 21.015639, lng: 105.779972, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Sun - Me Tri</font></p></a></b>"}, 
-{lat: 21.035499999999999, lng: 105.76991700000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Zei My Dinh</font></p></a></b>"}, 
-{lat: 21.00525, lng: 105.739222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinhomes Smart City</font></p></a></b>"}, 
-{lat: 21.027833000000001, lng: 105.769583, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung cu CT5 - CT6 Le Duc Tho</font></p></a></b>"}, 
-{lat: 21.030722000000001, lng: 105.76125, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Florene My Dinh</font></p></a></b>"}, 
-{lat: 20.985917000000001, lng: 105.76625, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Startup Tower</font></p></a></b>"}, 
-{lat: 21.031444, lng: 105.759833, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Iris Garden</font></p></a></b>"}, 
-{lat: 21.047471999999999, lng: 105.73527799999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hateco Xuan Phuong</font></p></a></b>"}, 
-{lat: 21.017555999999999, lng: 105.773917, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Emerald</font></p></a></b>"}, 
-{lat: 21.029471999999998, lng: 105.777056, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> My Dinh Plaza 2</font></p></a></b>"}, 
-{lat: 21.030028000000001, lng: 105.778583, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sunshine Center</font></p></a></b>"}, 
-{lat: 21.031082999999999, lng: 105.755583, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> CT2 Xuan Phuong</font></p></a></b>"}, 
-{lat: 21.035139000000001, lng: 105.765528, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Golden Field My Dinh</font></p></a></b>"}, 
-{lat: 21.040861, lng: 105.735056, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Athena Complex</font></p></a></b>"}, 
-{lat: 20.993500000000001, lng: 105.78611100000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Ecolife Capitol</font></p></a></b>"}, 
-{lat: 21.030166999999999, lng: 105.777111, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Garden Hill - 99 Tran Binh</font></p></a></b>"}, 
-{lat: 20.994111, lng: 105.779222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Trung Van - Vinaconex 3</font></p></a></b>"}, 
-{lat: 20.996389000000001, lng: 105.78405600000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> VOV Me Tri</font></p></a></b>"}, 
-{lat: 21.034222, lng: 105.765, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> MD Complex My Dinh</font></p></a></b>"}, 
-{lat: 21.027332999999999, lng: 105.778111, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> FLC Complex 36 Pham Hung</font></p></a></b>"}, 
-{lat: 21.002777999999999, lng: 105.79275, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Thang Long Number One</font></p></a></b>"}, 
-{lat: 21.030944000000002, lng: 105.775611, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> My Dinh Plaza</font></p></a></b>"}, 
-{lat: 21.011972, lng: 105.775333, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Golden Palace</font></p></a></b>"}, 
-{lat: 21.029667, lng: 105.77625, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Dolphin Plaza</font></p></a></b>"}, 
-{lat: 21.016667000000002, lng: 105.78375, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Keangnam Hanoi Landmark Tower</font></p></a></b>"}, 
-{lat: 21.035610999999999, lng: 105.766694, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Mon City</font></p></a></b>"}, 
-{lat: 21.035167000000001, lng: 105.761083, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinhomes Gardenia</font></p></a></b>"}, 
-{lat: 21.014610999999999, lng: 105.775722, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Manor</font></p></a></b>"}, 
-{lat: 21.033999999999999, lng: 105.770278, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Flc Landmark Tower</font></p></a></b>"}, 
-{lat: 21.032499999999999, lng: 105.76991700000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sun Square</font></p></a></b>"}, 
-{lat: 21.011417000000002, lng: 105.785472, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinhomes West point</font></p></a></b>"}, 
-{lat: 21.019777999999999, lng: 105.781667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Vinhomes Skylake</font></p></a></b>"}, 
-{lat: 20.99775, lng: 105.79508300000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> HH2 - Bắc Hà</font></p></a></b>"}, 
-{lat: 21.031555999999998, lng: 105.764278, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu đô thị Mỹ Đình I</font></p></a></b>"}, 
-{lat: 21.033611000000001, lng: 105.765972, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu đô thị Mỹ Đình II</font></p></a></b>"}, 
-{lat: 21.016472, lng: 105.779472, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> KDT Mỹ Đình Sông Đà - Sudico</font></p></a></b>"}, 
-{lat: 20.991167000000001, lng: 105.7885, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Trung Văn - Hancic</font></p></a></b>"}, 
-{lat: 21.084278000000001, lng: 105.807389, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sunshine Golden River</font></p></a></b>"}, 
-{lat: 21.064527999999999, lng: 105.808639, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> CT36 Xuan La</font></p></a></b>"}, 
-{lat: 21.080832999999998, lng: 105.815944, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Pent Studio</font></p></a></b>"}, 
-{lat: 21.079722, lng: 105.812583, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Udic Westlake</font></p></a></b>"}, 
-{lat: 21.051278, lng: 105.799306, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> 6th Element</font></p></a></b>"}, 
-{lat: 21.089306000000001, lng: 105.794667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tay Ho River view</font></p></a></b>"}, 
-{lat: 21.070028000000001, lng: 105.81138900000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> D'EL Dorado</font></p></a></b>"}, 
-{lat: 21.083832999999998, lng: 105.81225000000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sunshine Riverside</font></p></a></b>"}, 
-{lat: 21.051528000000001, lng: 105.801389, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Ecolife Tay Ho</font></p></a></b>"}, 
-{lat: 21.040832999999999, lng: 105.825722, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sun Grand City</font></p></a></b>"}, 
-{lat: 21.065249999999999, lng: 105.82730599999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> D'. Le Roi Soleil - Quang An</font></p></a></b>"}, 
-{lat: 21.084083, lng: 105.8105, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Lac Hong Westlake</font></p></a></b>"}, 
-{lat: 21.052, lng: 105.80927800000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Oriental Westlake</font></p></a></b>"}, 
-{lat: 21.086777999999999, lng: 105.814222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu Packexim 2</font></p></a></b>"}, 
-{lat: 21.055806, lng: 105.805306, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tay Ho Residence</font></p></a></b>"}, 
-{lat: 21.042611000000001, lng: 105.820667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Five Star Westlake</font></p></a></b>"}, 
-{lat: 20.970555999999998, lng: 105.822694, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Galaxy Tower Nguyen Xien</font></p></a></b>"}, 
-{lat: 20.980667, lng: 105.80713900000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Eco Dream Nguyen Xien</font></p></a></b>"}, 
-{lat: 20.932888999999999, lng: 105.851361, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tecco Tu Hiep</font></p></a></b>"}, 
-{lat: 20.982832999999999, lng: 105.80922200000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Housinco Grand Tower</font></p></a></b>"}, 
-{lat: 20.981694000000001, lng: 105.87136099999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu Dai Thanh</font></p></a></b>"}, 
-{lat: 20.958611000000001, lng: 105.804694, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tabudec Plaza</font></p></a></b>"}, 
-{lat: 20.952805999999999, lng: 105.852194, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tu Hiep Plaza</font></p></a></b>"}, 
-{lat: 20.983582999999999, lng: 105.808722, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Eco Green City</font></p></a></b>"}, 
-{lat: 20.968889000000001, lng: 105.792222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung Cu Vien 103</font></p></a></b>"}, 
-{lat: 20.951360999999999, lng: 105.847222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Dragon Riverside Phap Van</font></p></a></b>"}, 
-{lat: 20.998888999999998, lng: 105.805667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Bohemia Residence</font></p></a></b>"}, 
-{lat: 21.004639000000001, lng: 105.802667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> C3 Tower - Golden Palace</font></p></a></b>"}, 
-{lat: 20.995999999999999, lng: 105.802667, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung cư 282 Nguyễn Huy Tưởng</font></p></a></b>"}, 
-{lat: 20.999806, lng: 105.79811100000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung cư Ban cơ yếu Chính phủ</font></p></a></b>"}, 
-{lat: 20.980222000000001, lng: 105.82641700000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung cư C13 Bộ Quốc Phòng</font></p></a></b>"}, 
-{lat: 21.002417000000001, lng: 105.802222, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung cư Golden West</font></p></a></b>"}, 
-{lat: 20.985417000000002, lng: 105.798194, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung cư PCC1 Triều Khúc</font></p></a></b>"}, 
-{lat: 21.000556, lng: 105.8045, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Chung cư The Legacy</font></p></a></b>"}, 
-{lat: 21.005417000000001, lng: 105.80408300000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Diamond Flower Tower</font></p></a></b>"}, 
-{lat: 21.001694000000001, lng: 105.820472, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Fafilm - VNT Tower</font></p></a></b>"}, 
-{lat: 20.985972, lng: 105.812556, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Five Star Kim Giang</font></p></a></b>"}, 
-{lat: 20.993556000000002, lng: 105.807, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Golden Land</font></p></a></b>"}, 
-{lat: 20.995056000000002, lng: 105.805306, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> GoldSeason</font></p></a></b>"}, 
-{lat: 21.004722000000001, lng: 105.804778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hà Nội Center Point</font></p></a></b>"}, 
-{lat: 21.003917000000001, lng: 105.803472, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Handi Resco Lê Văn Lương</font></p></a></b>"}, 
-{lat: 21.000305999999998, lng: 105.807, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hapulico Complex</font></p></a></b>"}, 
-{lat: 21.003111000000001, lng: 105.805556, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Hei Tower</font></p></a></b>"}, 
-{lat: 20.997582999999999, lng: 105.803056, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Imperia Garden</font></p></a></b>"}, 
-{lat: 20.985555999999999, lng: 105.84044400000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Imperial Plaza</font></p></a></b>"}, 
-{lat: 20.996110999999999, lng: 105.805778, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Khu nhà ở 90 Nguyễn Tuân</font></p></a></b>"}, 
-{lat: 20.999389000000001, lng: 105.801833, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Legend Tower 109 Nguyễn Tuân</font></p></a></b>"}, 
-{lat: 20.998166999999999, lng: 105.80716700000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Mỹ Sơn Tower</font></p></a></b>"}, 
-{lat: 20.985306000000001, lng: 105.8005, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Pandora 53 Triều Khúc</font></p></a></b>"}, 
-{lat: 20.990860999999999, lng: 105.814139, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Riverside Garden</font></p></a></b>"}, 
-{lat: 21.003, lng: 105.81527800000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Royal City</font></p></a></b>"}, 
-{lat: 20.994582999999999, lng: 105.81791699999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Star Tower 283 Khương Trung</font></p></a></b>"}, 
-{lat: 21.000582999999999, lng: 105.803611, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Stellar Garden</font></p></a></b>"}, 
-{lat: 21.001916999999999, lng: 105.822417, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Tân Hồng Hà Complex</font></p></a></b>"}, 
-{lat: 21.000028, lng: 105.80500000000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Thanh Xuân Complex</font></p></a></b>"}, 
-{lat: 20.999749999999999, lng: 105.82852800000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Artemis</font></p></a></b>"}, 
-{lat: 21.007000000000001, lng: 105.80763899999999, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> The Golden Palm Lê Văn Lương</font></p></a></b>"}, 
-{lat: 20.997056000000001, lng: 105.80494400000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Thống Nhất Complex</font></p></a></b>"}, 
-{lat: 21.002889, lng: 105.80197200000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Times Tower - HACC1 Complex Building</font></p></a></b>"}, 
-{lat: 20.999222, lng: 105.807833, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Rivera Park</font></p></a></b>"}, 
-{lat: 20.997444000000002, lng: 105.809167, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Sakura Tower</font></p></a></b>"}, 
-{lat: 20.999972, lng: 105.79986100000001, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=#><p align=middle><font size=4> Viet Duc Tower</font></p></a></b>"}, 
+    map.on('load', function() {
+        // Add a new source from our GeoJSON data and
+        // set the 'cluster' option to true. GL-JS will
+        // add the point_count property to your source data.
+        map.addSource('earthquakes', {
+            type: 'geojson',
+            // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
+            // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
+            data:
+                {
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Southern Industrial Park Yen Bai Province<br> 7,1usd/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 104.9418057, 21.6756925, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Lương Sơn Industrial Park<br> 82USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.5484642, 20.8822227, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> kcn bắc thăng long<br> 90USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.77810220000001, 21.124536899999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Binh Luc Industry Zone<br> 46USD/sqm/44years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.03811090000001, 20.4753334, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Yen Phong IP<br> 76USD/ m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0042073, 21.192171699999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Van Trung Industry Zone<br> 75USD/sqm/45years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1295336, 21.245377000000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Minh Duc Industry Zone<br> 60USD/sqm/50 years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.12901340000001, 20.9161143, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Song Tra Industry Zone<br> 2.5USD/sqm/montn  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.32404990000001, 20.477980200000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Lai Vu<br> 55USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.39315120000001, 20.9803076, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Pho Noi A Industry Zone<br> 80USD/sqm/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.02551819999999, 20.956930400000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Yen Binh Industry Zone<br> 60USD/sqm/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.90052350000001, 21.430857199999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Diem Thuy Industry Zone<br> 48USD/sqm/40years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.891971, 21.474341800000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Dong Van IV Industry Zone<br> 57USD/sqm/50 years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.8955658, 20.638668899999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Nam Thăng Long Industrial Park<br> 120USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.761769, 21.082578600000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN PHÚ NGHĨA<br> 5 ha  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.7403123, 20.954691400000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Lại Dụ<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.704435, 20.977982900000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Lại Yên Industry zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.7182385, 21.022824, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN VSIP<br> 85USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9762884, 21.077036400000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Đại Đồng<br> 65USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.99809500000001, 21.1052058, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Trục chính KCN Tiên Sơn<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9977748, 21.1257433, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Yen Phong Industrial Zone 2<br> 76USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.95335009999999, 21.204578099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Thạch Thất<br> 85USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.6310474, 21.006475699999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cum Công Nghiệp Trường An Xã An Khánh Hoài Đức Hà Nội<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.7263128, 20.997368099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp xã kim bình<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.918595, 20.573345499999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tay Bac Cu Chi Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.4840413, 10.9830763, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Dong Nam Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.6210686, 10.969378300000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tan Phu Trung Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.53524659999999, 10.921779600000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Khai Quang<br> 63USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.6333236, 21.3079027, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Thang Long II<br> 90-95USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.061348, 20.9146848, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Quế Võ Industrial Zone<br> 64USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1133033, 21.153963099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Pho Noi B Textile and Garment Industrial Park<br> 70- 75USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0575056, 20.924525800000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm Công nghiệp đông thọ<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.94637419999999, 21.1795911, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm Công Nghiệp Ngọc Hồi<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.8515451, 20.9132201, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Thanh Oai Industrial Area<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.80114279999999, 20.8720426, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Quang Minh Industrial Zone<br> 120USD/m2/ 50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.77925209999999, 21.1856191, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Nam Cầu Kiền<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.63354959999999, 20.914779200000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Bá Thiện 1<br> 45USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.6797689, 21.326165199999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Khai Sơn Thuận Thành<br> 52USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.05898620000001, 21.036857300000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phúc Điền Industrial Park<br> 55USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2040769, 20.930793000000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phu Hung Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9902281, 20.968720600000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Yên Phong Mở Rộng<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0005295, 21.2216375, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp an dương<br> 65USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.5796113, 20.873230199999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Ecological Zone Cuisine Vinh Hung<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.877388, 20.993811000000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Hai Ha Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.74881670000001, 21.3657714, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp DEEP C HP II<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.77959730000001, 20.803984700000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Vsip Hai Duong Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1732444, 20.928766199999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tan Thoi Hiep Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.6307187, 10.8850243, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Binh Chieu Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7307943, 10.883324200000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Trang Due Industrial Park<br> 60USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.5715707, 20.857410699999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tan Truong Industrial Zone<br> 54- 57USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2270607, 20.935504600000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phuc Khanh Industrial Zone<br> 30USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.31265980000001, 20.4414804, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Hạp Lĩnh Nam Sơn Industrial Zone<br> 60USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0956465, 21.130895200000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Khánh Phú<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0225859, 20.232081300000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Yen My II Industrial Zone<br> 80usd/m2/50년  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0435813, 20.877169599999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Lộc Son<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.83702049999999, 11.5188276, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Hoà Phú<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9702104, 21.234251400000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Nam Dinh Vu non-tariff and industrial park (zone 1)<br> 70- 120USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.81154960000001, 20.815795399999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cai Lan Industrial Zone<br> 60USD/m2/Years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.0448962, 20.972393, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Thụy Vân Industrial Park<br> 30USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.3526452, 21.343331200000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN Bình Xuyên 2<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.67926749999999, 21.303257500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Nội Hoàng<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1689138, 21.244645500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> công ti asia khu công nghiệp song khê<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1766047, 21.2435002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Fugiang Vân Trung<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.144429, 21.250619700000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Chau Son Industrial Park Henan<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.8976869, 20.5196857, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KHU CÔNG NGHIỆP BÌNH XUYÊN<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.65512270000001, 21.280358100000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Đồ Sơn<br> 85usd- 97usd/m2/50년  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7606923, 20.739311900000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp VSIP<br> 80-90USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.702825, 20.904087499999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Tam Hiệp<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.62446199999999, 21.082094699999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Phúc Sơn<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9861619, 20.216262799999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Đình Trám Industrial Zone<br> 45USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.12694500000001, 21.254740000000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm Công nghiệp xã Chiềng Châu<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.0751174, 20.638599899999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Lạc Thịnh<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.5967236, 20.4008295, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm Công Nghiệp Đồng Hướng<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.10126510000001, 20.0962736, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm Công Nghiệp Đồng Phong<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.7322502, 20.320522400000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm Công nghiệp Đồng Tu<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2040454, 20.595583600000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Nguyễn Đức Cảnh<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.3293252, 20.4471621, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Cầu Nghìn<br> 50USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.4352464, 20.655644899999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Bau Xeo Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.0308742, 10.957122099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phu My I Industrial Zone<br> 65  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.0480556, 10.5905556, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Song May Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.9540283, 10.9713461, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Honai Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.93857869999999, 10.950114299999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Amata Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.8909948, 10.939308499999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Lễ Môn<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.8128851, 19.7817981, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Tây Bắc Ga<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.7659269, 19.826537299999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Rạng Đông<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1803625, 19.986333900000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Hoa Khanh Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.12876249999999, 16.0833431, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> An Don Industrial Zone Danang<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.2323111, 16.0777517, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Da Nang Industrial Park (Khu công nghiệp Đà Nẵng)<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.23718959999999, 16.0775611, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Hoà Cầm<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.18818469999999, 16.004451400000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Hoang Mai Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.72491960000001, 19.298073500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công Nghiệp Tri Lễ<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.1563747, 18.947284799999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Nam Cam Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.6667367, 18.8261182, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Xóm 4 Nghi Phú<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.67826239999999, 18.7263096, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cổng Khu công nghiệp VSIP Nghệ An<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.6319649, 18.704521700000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp vàng bạc đá quý<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.5986283, 18.689282800000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Bim Son Industrial Park<br> 30USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.8466638, 20.109590399999998, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Phú Vinh<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.39840409999999, 18.012982000000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Northwest Industrial Park in Dong Hoi<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.583641, 17.488457199999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Quán Ngang<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.08124410000001, 16.8904143, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Nam Đông Hà<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.11366630000001, 16.789783799999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm công nghiệp Diên Sanh<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.2559605, 16.68083, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Dac Loc industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 109.16199109999999, 12.3012961, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Quang Ngai VSIP Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.7892724, 15.215720900000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tinh Phong Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.7988366, 15.1988612, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Quang Phu industrial zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.7671053, 15.118623400000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Phú Tài<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 109.1448314, 13.782018900000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> An Phuoc Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.9618341, 10.853688, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phu An Thanh Industrial Park<br> 119-135,  144-160 USD  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.4516149, 10.6813024, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN Long Duc<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.9785175, 10.842186099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Ninh Thủy<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 109.2466924, 12.504872600000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Suoi Dau Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 109.0681374, 12.1487763, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tan Binh Industrial Zone (Tanimex)<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.623893, 10.8152115, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> An Ha Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.5109631, 10.811871200000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tan Tao Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.5902876, 10.7460816, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Le Minh Xuan Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.54235799999999, 10.7418662, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phong Phu Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.6433966, 10.6983537, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Hiep Phuoc Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7466009, 10.638517, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Robustness port Hiep Phuoc Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7347827, 10.6528358, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Trung An industrial cluster<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.332888, 10.3476658, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Hoa Phu Industrial Park<br> 60 USD  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.93197480000001, 10.1730071, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Binh Minh Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.82423780000001, 10.037643299999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Chau Duc Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.1706398, 10.58925, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Da Bac Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.2757864, 10.5789048, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Đất Đỏ 1<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.30223839999999, 10.504759999999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Long Sơn<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.08916670000001, 10.452500000000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Dong Xuyen Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.11637380000001, 10.399841, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Giao Long Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.4001846, 10.2981146, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tra Noc Industrial Zone in Can Tho<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.7152609, 10.1006312, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Xẻo Rô<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.11680339999999, 9.8504684000000005, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu CN Khánh An<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.0577457, 9.2279234999999993, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Thạnh Lộc<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.13189819999999, 9.9899632999999994, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Binh Long Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.249289, 10.567171500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Binh Hoa Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.3418949, 10.4544572, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Song Hau Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.5985542, 10.2499033, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Linh Trung 3 Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.3943622, 11.013886599999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Trang Bang Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.3949516, 11.0214242, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Bourbon An Hoa TransAsia Industrial Garden (Khu công nghiệp Xuyên Á Bourbon An Hòa)<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.3278052, 11.034349000000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN Thành Thành Công<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.3192514, 11.021049, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phuoc Dong Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.3191905, 11.1370942, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Chà Là<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2058837, 11.295595499999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Tam Thăng<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.4684354, 15.619972199999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Hòa Bình<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.9891252, 14.3234467, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Trà Đa<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 108.03171, 14.019297, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Đông Mai<br> 55usd/m2/50년  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.84121020000001, 21.0060763, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Thanh Bình<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.8040965, 21.933755099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Long Binh Industrial Park - An, Tuyen Quang<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.24653669999999, 21.731650200000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Thai Hoa Industrial Park<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.4744537, 10.9283622, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cụm công nghiệp Bạch Hạc<br> 0,43USD/m2/years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.44409709999999, 21.2832878, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Kcn Đồng Lạng<br> 25USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.3504611, 21.385528000000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Đại An<br> 55-68USD/m2/Years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2669247, 20.9297632, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> VSIP<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9653268, 21.0940358, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> 꽝밍공업단지<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.77925209999999, 21.1856191, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Thuận Thành 2<br> 32USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.09585079999999, 21.056609999999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Thuan Thanh III Industrial Park<br> 58USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0583468, 21.047789999999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Hanaka Industrial Park<br> 39USD/m2/years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9582372, 21.124624600000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu CN Bình Vàng<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 104.9768543, 22.713180099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Dong Van I industrial Zone<br> 50-55USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9218913, 20.6364418, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Dong Van II Industrial Park<br> 58USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.91757680000001, 20.665318500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Việt Hòa-Kenmark<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2871315, 20.939228799999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> IZ Lai Cach<br> 55USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2516315, 20.934606200000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tien Hai Industrial Park<br> 25USD/m2?50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.52158129999999, 20.391947099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công nghiệp Hải Yên - Viglacera<br> 30USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 107.91613630000001, 21.541309800000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Que Vo III Industrial Park<br> 65USD/m2/years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.17879600000001, 21.138383300000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Que Vo Industrial Park 2<br> 64USD/m2/50years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2220739, 21.128552500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN Phú Thái<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.51456020000001, 20.962667100000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN CỘNG HOÀ CHÍ LINH HẢI DƯƠNG<br> 50USD/m2/years  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.4217838, 21.129179499999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Luong Son Cluster Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2952591, 21.401541099999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Tan Hung Cluster Industrial Zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.2916431, 21.351537, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Ba Thien II Industrial Zone<br> 70-75usd/sqm  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.6750613, 21.338784499999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Gia Lễ<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.35668099999999, 20.503223500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu Công Nghiệp Tân Liên<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.4915608, 20.703779600000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN Hòa xá<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1461747, 20.417607199999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khu công nghiệp Mỹ Trung<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1930152, 20.452692500000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Bao Minh Industrial Zone Management Board<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.1031586, 20.344221399999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Ý Yên II Industrial zone<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.95436340000001, 20.405581999999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Khánh Phú Industrial Zone<br> 35-40 Usd/sqm/year  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.0303645, 20.244480500000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> HANSSIP<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9147741, 20.708827500000002, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Phu nghia 2<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.671415, 20.929724799999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN Hiệp Phước 2<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7515861, 10.641088399999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCX Linh Trung 1<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.768351, 10.8686091, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN QUANG MINH<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.74798319999999, 21.206851, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN HÀ NỘI - ĐÀI TƯ<br> 10 ha  </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.9263243, 21.026779399999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Bien Hoa 2<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.87755249999999, 10.928039399999999, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Cat Lai 2<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7726538, 10.764358, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCN KCX TÂN THUẬN<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.72983619999999, 10.752447800000001, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> KCX Linh Trung 2<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7240779, 10.8906212, 105.5 ] } }, 
+{ "type": "Feature", "properties": { "id": "ak16994519", "mag": "<div align='center'><a href=# style=text-decoration:none><p align=middle><font size=4> Long Hậu<br>   </font></p></a></div>", "time": 1507425289659, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 106.7143665, 10.6385048, 105.5 ] } }, 
 
 
-//      {lat: 21.051467, lng: 105.792779, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/an-binh-city><p align=middle><font size=4> Toa Nha Intracom 2 <br> 32,341,000vnd/sqm  </font></p></a></b>"},
-//        {lat: 21.051467, lng: 105.792779, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/an-binh-city><p align=middle><font size=4> Toa Nha Intracom 2 <br> 32,341,000vnd/sqm  </font></p></a></b>"},
-//        {lat: 21.051467, lng: 105.792779, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/an-binh-city><p align=middle><font size=4> Toa Nha Intracom 2 <br> 32,341,000vnd/sqm  </font></p></a></b>"},
-//        {lat: 21.051467, lng: 105.792779, info: "<img src='https://haiphat.org/wp-content/uploads/bfi_thumb/khu-do-thi-thuan-thanh-370ahkztg4b01neokq57nu.jpg' height='200px' width='300px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/an-binh-city><p align=middle><font size=4> Toa Nha Intracom 2 <br> 32,341,000vnd/sqm  </font></p></a></b>"},
 
 
-        {lat: 21.051467, lng: 105.792779, info: "<img src='https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'><br><b><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/kdtm-nghia-do style=text-decoration:none><p align=middle><font size=4> KDTM Nghia Do</font></p></a></b>"}       
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-      
-       
-];
-//-------------end location viglacera-----
-var factory = [
-     
-//{lat:  ....., lng:  ....., info: "<h3> .....</h3><img src=' .....' height='200px' width='380px'><b>Description:</b><br><b>Address:</b>..... Province.<hr><b>Total Area:</b>...<hr><b>Price:</b> (updated ...).<br>- Rental fee: ...usd/sqm.<br>- Management fee: ...usd/sqm/year.<br>-Electricity fee:...<br>- Water fee: ...usd/m3.<br>- Wastewater fee: ...usd/m3.<hr><b>Worker Salary:</b> ...usd/person/month. <hr><b>Land Period:</b> .....<hr><b>Advantage</b><br>... <hr><b>Infrastructure</b><br>- Water treatment station with capacity of ...m3/day.<br>- Power is supplied from national grid ....<br>- Waste water treatment station with the capacity of ... m3/day. <br>- Telecommunication system..."},
-
+{ "type": "Feature", "properties": { "id": "hv61900626", "mag": "<div align='center'><a href=https://sites.google.com/add-group.net/hotels-services/hotel-apartment/google-map/an-binh-city style=text-decoration:none><p align=middle><font size=4> KDTM Nghia Do <br> 33,372,880vnd/sqm  </font></p></a></div>", "time": 1504833891990, "felt": null, "tsunami": 0 }, "geometry": { "type": "Point", "coordinates": [ 105.792779, 21.051467, 2.609 ] } }
 ]
-    </script>
+},
+            cluster: true,
+            clusterMaxZoom: 14, // Max zoom to cluster points on
+            clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+        });
 
+        map.addLayer({
+            id: 'clusters',
+            type: 'circle',
+            source: 'earthquakes',
+			style: 'cluster',
+            filter: ['has', 'point_count'],
+            paint: {
+                // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+                // with three steps to implement three types of circles:
+                //   * Blue, 20px circles when point count is less than 100
+                //   * Yellow, 30px circles when point count is between 100 and 750
+                //   * Pink, 40px circles when point count is greater than or equal to 750
+                'circle-color': [
+                    'step',
+                    ['get', 'point_count'],
+                    '#ff7800',
+                    100,
+                    '#f1f075',
+                    750,
+                    '#f28cb1'
+                ],
+				'circle-stroke-color': [
+                    'step',
+                    ['get', 'point_count'],
+                    '#ffae00',
+                    100,
+                    '#ffae00',
+                    750,
+                    '#ffae00'
+                ],
+				'circle-stroke-width': 8,
+                'circle-radius': [
+                    'step',
+                    ['get', 'point_count'],
+                    10,
+                    100,
+                    15,
+                    750,
+                    20
+                ]
+            }
+        });
 
+        map.addLayer({
+            id: 'cluster-count',
+            type: 'symbol',
+            source: 'earthquakes',
+            filter: ['has', 'point_count'],
+            layout: {
+                'text-field': '{point_count_abbreviated}',
+                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-size': 12
+            }
+        });
 
+        map.addLayer({
+            id: 'unclustered-point',
+            type: 'circle',
+            source: 'earthquakes',
+            filter: ['!', ['has', 'point_count']],
+            paint: {
+                'circle-color': 'Blue',
+                'circle-radius': 4,
+                'circle-stroke-width': 8,
+                'circle-stroke-color': '#7678b5'
+            }
+        });
 
-	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-    </script> 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM89L8uNkaUpbRLJTibMZj4Kl9FMHPrc4&libraries=places&callback=initMap"
-         async defer>
-		 
-		 </script>
-  </body>
+        // inspect a cluster on click
+        map.on('click', 'clusters', function(e) {
+            var features = map.queryRenderedFeatures(e.point, {
+                layers: ['clusters']
+            });
+            var clusterId = features[0].properties.cluster_id;
+            map.getSource('earthquakes').getClusterExpansionZoom(
+                clusterId,
+                function(err, zoom) {
+                    if (err) return;
+
+                    map.easeTo({
+                        center: features[0].geometry.coordinates,
+                        zoom: zoom
+                    });
+                }
+            );
+        });
+        
+        // When a click event occurs on a feature in
+        // the unclustered-point layer, open a popup at
+        // the location of the feature, with
+        // description HTML from its properties.
+        map.on('click', 'unclustered-point', function(e) {
+
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var mag = e.features[0].properties.mag;
+            new mapboxgl.Popup({className: 'mapboxgl'})
+                .setLngLat(coordinates)
+                .setHTML("<img src=' https://1.bp.blogspot.com/-fdwl_Rnt7Rw/XpliSz2kqiI/AAAAAAAAES8/WH63iZyZXCsFDjYy-r502qod93cmgClFwCLcBGAsYHQ/s1600/ADD.png' height='220px' width='330px'>"  + mag )
+                .addTo(map);
+        });
+
+        map.on('mouseenter', 'clusters', function() {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'clusters', function() {
+            map.getCanvas().style.cursor = '';
+        });
+    });
+</script>
+
+</body>
 </html>
