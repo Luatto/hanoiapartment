@@ -7,8 +7,8 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
 <style>
-	body { margin: 0; padding: 0; }
-	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+	body { margin: 0; padding: 0;}
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; margin-left: -30% }
 .mapboxgl-popup-content-wrapper{
     padding-top: 0px;
     margin-right: 0px;
